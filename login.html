@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - ADMISOFT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        admisoft: {
+                            DEFAULT: '#4F46E5',
+                            dark: '#4338CA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 h-full">
+    <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="flex justify-center">
+                <i class="fas fa-cube text-admisoft dark:text-admisoft-dark text-5xl"></i>
+            </div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+                Connexion Admin
+            </h2>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <form class="space-y-6" id="loginForm">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Email administrateur
+                        </label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white sm:text-sm"
+                                placeholder="admin@admisoft.com">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Mot de passe
+                        </label>
+                        <div class="mt-1">
+                            <input id="password" name="password" type="password" required
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white sm:text-sm"
+                                placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="loginBtn"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-admisoft dark:bg-admisoft-dark hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <span id="loginText">Se connecter</span>
+                            <span id="loginSpinner" class="hidden ml-2">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion du mode sombre
+        const themeToggleBtn = document.createElement('button');
+        themeToggleBtn.id = 'theme-toggle';
+        themeToggleBtn.type = 'button';
+        themeToggleBtn.className = 'fixed bottom-4 right-4 p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700';
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block"></i>';
+        document.body.appendChild(themeToggleBtn);
+
+        const html = document.documentElement;
+        if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('color-theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Gestion du formulaire de connexion
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            
+            // Afficher le spinner
+            loginBtn.disabled = true;
+            loginText.textContent = 'Connexion...';
+            loginSpinner.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('http://localhost/admisoft/admin/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Échec de la connexion',
+                        text: data.error,
+                        confirmButtonColor: '#4F46E5'
+                    });
+                } else if (data.success) {
+                    // Redirection vers index.html après connexion réussie
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Connexion réussie',
+                        text: 'Redirection en cours...',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'index.html';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur inconnue',
+                        text: 'Une erreur est survenue lors de la connexion',
+                        confirmButtonColor: '#4F46E5'
+                    });
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur réseau',
+                    text: 'Impossible de se connecter au serveur',
+                    confirmButtonColor: '#4F46E5'
+                });
+            } finally {
+                // Réinitialiser le bouton
+                loginBtn.disabled = false;
+                loginText.textContent = 'Se connecter';
+                loginSpinner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
