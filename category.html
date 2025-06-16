@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Catégories - ADMISOFT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        admisoft: {
+                            DEFAULT: '#4F46E5',
+                            dark: '#4338CA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-full">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navbar avec bouton hamburger -->
+        <nav class="bg-white dark:bg-gray-800 shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <!-- Bouton hamburger (visible sur mobile) -->
+                        <div class="flex-shrink-0 flex items-center md:hidden">
+                            <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                        <div class="flex-shrink-0 flex items-center">
+                            <i class="fas fa-cube text-admisoft dark:text-admisoft-dark text-2xl mr-2"></i>
+                            <span class="text-xl font-bold text-gray-900 dark:text-white">ADMISOFT</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-moon dark:hidden"></i>
+                            <i class="fas fa-sun hidden dark:block"></i>
+                        </button>
+                        <button onclick="window.open('https://www.admisoft.com', '_blank')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Visiter notre site web">
+                            <i class="fas fa-eye text-admisoft dark:text-admisoft-dark"></i>
+                        </button>
+                        <div class="relative">
+                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Sidebar - Caché sur mobile par défaut -->
+            <div class="hidden md:flex md:flex-shrink-0">
+                <div id="sidebar" class="flex flex-col w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:fixed md:inset-y-0 md:left-0 md:transform md:translate-x-0 md:transition md:duration-200 ease-in-out -translate-x-full">
+                    <div class="h-0 flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+                        <nav class="flex-1 px-2 space-y-1">
+                            <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-tachometer-alt mr-3 flex-shrink-0"></i>
+                                Dashboard
+                            </a>
+                            <a href="#" class="bg-gray-100 dark:bg-gray-700 text-admisoft dark:text-admisoft-dark group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-project-diagram mr-3 flex-shrink-0"></i>
+                                Category-process
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-palette mr-3 flex-shrink-0"></i>
+                                Color
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-users mr-3 flex-shrink-0"></i>
+                                Customer
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-envelope mr-3 flex-shrink-0"></i>
+                                Message
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-shopping-cart mr-3 flex-shrink-0"></i>
+                                Order
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-newspaper mr-3 flex-shrink-0"></i>
+                                Post
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-box-open mr-3 flex-shrink-0"></i>
+                                Product
+                            </a>
+                            <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-concierge-bell mr-3 flex-shrink-0"></i>
+                                Service
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overlay pour fermer le menu sur mobile -->
+            <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden hidden"></div>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto focus:outline-none">
+                <div class="py-6">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between items-center">
+                            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Catégories</h1>
+                            <button id="addCategoryBtn" class="px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-800 transition duration-300">
+                                <i class="fas fa-plus mr-2"></i> Ajouter
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <!-- Categories Table -->
+                        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+                            <div class="overflow-x-auto">
+                                <table id="categories-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700" id="categories-table-body">
+                                        <!-- Data will be loaded from API -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Ajouter une catégorie</h3>
+                    <div class="mt-2">
+                        <input type="text" id="categoryName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la catégorie">
+                    </div>
+                </div>
+                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirmAddCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Enregistrer
+                    </button>
+                    <button type="button" id="cancelAddCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Modifier la catégorie</h3>
+                    <div class="mt-2">
+                        <input type="hidden" id="editCategoryId">
+                        <input type="text" id="editCategoryName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la catégorie">
+                    </div>
+                </div>
+                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirmEditCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Enregistrer
+                    </button>
+                    <button type="button" id="cancelEditCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
+    
+    <script>
+        // Dark mode toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Check for saved user preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        // Toggle theme
+        themeToggleBtn.addEventListener('click', function() {
+            html.classList.toggle('dark');
+            localStorage.setItem('color-theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Gestion du menu hamburger
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        mobileMenuButton.addEventListener('click', function() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        });
+
+        // Category CRUD Operations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize DataTable
+            const table = $('#categories-table').DataTable({
+                language: {
+                    "sEmptyTable": "Aucune donnée disponible",
+                    "sInfo": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                    "sInfoEmpty": "Affichage de 0 à 0 sur 0 entrées",
+                    "sInfoFiltered": "(filtré à partir de _MAX_ entrées totales)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ",",
+                    "sLengthMenu": "Afficher _MENU_ entrées",
+                    "sLoadingRecords": "Chargement...",
+                    "sProcessing": "Traitement...",
+                    "sSearch": "Rechercher:",
+                    "sZeroRecords": "Aucun enregistrement correspondant trouvé",
+                    "oPaginate": {
+                        "sFirst": "Premier",
+                        "sLast": "Dernier",
+                        "sNext": "Suivant",
+                        "sPrevious": "Précédent"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": activer pour trier par ordre croissant",
+                        "sSortDescending": ": activer pour trier par ordre décroissant"
+                    }
+                }
+            });
+
+            // Load categories from API
+            function loadCategories() {
+                fetch('http://localhost/admisoft/admin/process/category-process.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        table.clear().draw();
+                        data.forEach(category => {
+                            table.row.add([
+                                category.cat_id,
+                                category.cat_name,
+                                `<div class="flex space-x-2">
+                                    <button class="edit-btn p-1 text-blue-600 hover:text-blue-900 dark:hover:text-blue-400" data-id="${category.cat_id}" data-name="${category.cat_name}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-btn p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400" data-id="${category.cat_id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>`
+                            ]).draw(false);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: 'Impossible de charger les catégories',
+                        });
+                    });
+            }
+
+            // Initial load
+            loadCategories();
+
+            // Add Category Modal
+            const addModal = document.getElementById('addCategoryModal');
+            const addBtn = document.getElementById('addCategoryBtn');
+            const confirmAddBtn = document.getElementById('confirmAddCategory');
+            const cancelAddBtn = document.getElementById('cancelAddCategory');
+
+            addBtn.addEventListener('click', () => {
+                document.getElementById('categoryName').value = '';
+                addModal.classList.remove('hidden');
+            });
+
+            cancelAddBtn.addEventListener('click', () => {
+                addModal.classList.add('hidden');
+            });
+
+            confirmAddBtn.addEventListener('click', () => {
+                const name = document.getElementById('categoryName').value.trim();
+                if (!name) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Veuillez entrer un nom de catégorie',
+                    });
+                    return;
+                }
+
+                fetch('http://localhost/admisoft/admin/process/category-process.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cat_name: name })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Succès',
+                            text: 'Catégorie ajoutée avec succès',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        addModal.classList.add('hidden');
+                        loadCategories();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: data.error || 'Erreur lors de l\'ajout de la catégorie',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Erreur lors de l\'ajout de la catégorie',
+                    });
+                });
+            });
+
+            // Edit Category Modal
+            const editModal = document.getElementById('editCategoryModal');
+            const confirmEditBtn = document.getElementById('confirmEditCategory');
+            const cancelEditBtn = document.getElementById('cancelEditCategory');
+
+            // Handle edit button clicks (using event delegation)
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.edit-btn')) {
+                    const btn = e.target.closest('.edit-btn');
+                    const id = btn.getAttribute('data-id');
+                    const name = btn.getAttribute('data-name');
+                    
+                    document.getElementById('editCategoryId').value = id;
+                    document.getElementById('editCategoryName').value = name;
+                    editModal.classList.remove('hidden');
+                }
+            });
+
+            cancelEditBtn.addEventListener('click', () => {
+                editModal.classList.add('hidden');
+            });
+
+            confirmEditBtn.addEventListener('click', () => {
+                const id = document.getElementById('editCategoryId').value;
+                const name = document.getElementById('editCategoryName').value.trim();
+                
+                if (!name) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Veuillez entrer un nom de catégorie',
+                    });
+                    return;
+                }
+
+                fetch('http://localhost/admisoft/admin/process/category-process.php', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        cat_id: id,
+                        cat_name: name 
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Succès',
+                            text: 'Catégorie modifiée avec succès',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        editModal.classList.add('hidden');
+                        loadCategories();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: data.error || 'Erreur lors de la modification de la catégorie',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Erreur lors de la modification de la catégorie',
+                    });
+                });
+            });
+
+            // Handle delete button clicks (using event delegation)
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.delete-btn')) {
+                    const btn = e.target.closest('.delete-btn');
+                    const id = btn.getAttribute('data-id');
+                    
+                    Swal.fire({
+                        title: 'Confirmer la suppression',
+                        text: "Êtes-vous sûr de vouloir supprimer cette catégorie?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#4F46E5',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimer!',
+                        cancelButtonText: 'Annuler'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('http://localhost/admisoft/admin/process/category-process.php', {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ id: id })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Supprimé!',
+                                        text: 'La catégorie a été supprimée.',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    });
+                                    loadCategories();
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Erreur',
+                                        text: data.error || 'Erreur lors de la suppression de la catégorie',
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erreur',
+                                    text: 'Erreur lors de la suppression de la catégorie',
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
