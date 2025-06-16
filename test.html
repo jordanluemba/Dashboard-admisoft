@@ -456,6 +456,7 @@
             const confirmAddBtn = document.getElementById('confirmAddCustomer');
             const cancelAddBtn = document.getElementById('cancelAddCustomer');
 
+            // Gestion du clic sur le bouton "Ajouter"
             addBtn.addEventListener('click', () => {
                 // Réinitialiser les champs
                 document.getElementById('firstname').value = '';
@@ -470,6 +471,7 @@
                 document.getElementById('cust_city').value = '';
                 document.getElementById('cust_country').value = '';
                 
+                // Afficher la modal
                 addModal.classList.remove('hidden');
             });
 
