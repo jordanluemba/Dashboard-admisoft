@@ -1,328 +1,184 @@
 <!DOCTYPE html>
 <html lang="fr" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Articles - ADMISOFT</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- ... (le reste du head reste identique) ... -->
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-full">
-    <!-- Structure similaire à votre exemple avec navbar et sidebar -->
-    
-    <!-- Content Area -->
-    <div class="flex-1 overflow-auto focus:outline-none">
-        <div class="py-6">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Articles</h1>
-                    <div class="flex space-x-2">
-                        <button id="refreshPosts" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Actualiser">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                        <button id="addPostBtn" class="p-2 rounded-lg bg-admisoft dark:bg-admisoft-dark text-white hover:bg-indigo-700 dark:hover:bg-indigo-800">
-                            <i class="fas fa-plus mr-1"></i> Nouvel Article
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <!-- Posts Table -->
-                <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                    <div class="overflow-x-auto">
-                        <table id="posts-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Titre</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sujet</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                <!-- Les données seront chargées dynamiquement -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ... (le reste du HTML reste identique jusqu'à la partie script) ... -->
 
-    <!-- Post Form Modal -->
-    <div id="postFormModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="modalTitle">Nouvel Article</h3>
-                    <form id="postForm" enctype="multipart/form-data">
-                        <input type="hidden" id="post_id">
-                        <div class="mb-4">
-                            <label for="post_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Titre</label>
-                            <input type="text" id="post_title" name="post_title" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
-                        </div>
-                        <div class="mb-4">
-                            <label for="post_subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sujet</label>
-                            <input type="text" id="post_subject" name="post_subject" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
-                        </div>
-                        <div class="mb-4">
-                            <label for="post_content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Contenu</label>
-                            <textarea id="post_content" name="post_content" rows="5" class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white"></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label for="post_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image</label>
-                            <input type="file" id="post_image" name="post_image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-admisoft file:text-white hover:file:bg-indigo-700 dark:file:bg-admisoft-dark dark:hover:file:bg-indigo-800">
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Format: JPG, PNG (Max: 2MB)</p>
-                            <div id="imagePreview" class="mt-2 hidden">
-                                <img id="previewImage" src="#" alt="Preview" class="max-h-40 rounded-md">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="savePostBtn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Enregistrer
-                    </button>
-                    <button type="button" id="cancelPostBtn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Annuler
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
-    
     <script>
-        // Configuration et fonctions utilitaires (comme dans votre exemple)
-        
-        $(document).ready(function() {
-            // Initialisation de DataTable
-            const table = $('#posts-table').DataTable({
-                responsive: true,
-                language: {
-                    // Configuration de langue comme dans votre exemple
-                }
-            });
+        // ... (les fonctions pour la sidebar et dark mode restent identiques) ...
 
-            // Charger les articles depuis l'API
-            function loadPosts() {
-                fetch('http://localhost/admisoft/admin/process/post-process.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        table.clear();
-                        data.forEach(post => {
-                            table.row.add([
-                                post.post_id,
-                                post.title,
-                                post.subject,
-                                new Date(post.created_at).toLocaleDateString(),
-                                `<div class="flex space-x-2">
-                                    <button class="edit-btn p-1 text-blue-600 hover:text-blue-900 dark:hover:text-blue-400" data-id="${post.post_id}">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="delete-btn p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400" data-id="${post.post_id}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>`
-                            ]).draw(false);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: 'Impossible de charger les articles',
-                        });
-                    });
-            }
-
-            // Chargement initial
-            loadPosts();
-
-            // Rafraîchir les articles
-            document.getElementById('refreshPosts').addEventListener('click', loadPosts);
-
-            // Gestion du formulaire d'article
-            const postFormModal = document.getElementById('postFormModal');
-            const postForm = document.getElementById('postForm');
-            const savePostBtn = document.getElementById('savePostBtn');
-            const cancelPostBtn = document.getElementById('cancelPostBtn');
-            const addPostBtn = document.getElementById('addPostBtn');
-            const modalTitle = document.getElementById('modalTitle');
-            const imagePreview = document.getElementById('imagePreview');
-            const previewImage = document.getElementById('previewImage');
-
-            // Afficher le modal pour ajouter un nouvel article
-            addPostBtn.addEventListener('click', () => {
-                postForm.reset();
-                document.getElementById('post_id').value = '';
-                modalTitle.textContent = 'Nouvel Article';
-                imagePreview.classList.add('hidden');
-                postFormModal.classList.remove('hidden');
-            });
-
-            // Prévisualisation de l'image
-            document.getElementById('post_image').addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        previewImage.src = e.target.result;
-                        imagePreview.classList.remove('hidden');
-                    }
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-
-            // Édition d'un article existant
-            $(document).on('click', '.edit-btn', function() {
-                const postId = $(this).data('id');
-                
-                fetch(`http://localhost/admisoft/admin/process/post-process.php?id=${postId}`)
-                    .then(response => response.json())
-                    .then(post => {
-                        // Remplir le formulaire
-                        document.getElementById('post_id').value = post.post_id;
-                        document.getElementById('post_title').value = post.title;
-                        document.getElementById('post_subject').value = post.subject;
-                        document.getElementById('post_content').value = post.content;
-                        
-                        // Afficher l'image existante si disponible
-                        if (post.image_path) {
-                            previewImage.src = post.image_path;
-                            imagePreview.classList.remove('hidden');
-                        } else {
-                            imagePreview.classList.add('hidden');
-                        }
-                        
-                        modalTitle.textContent = 'Modifier Article';
-                        postFormModal.classList.remove('hidden');
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: 'Impossible de charger les détails de l\'article',
-                        });
-                    });
-            });
-
-            // Sauvegarder l'article (création ou mise à jour)
-            savePostBtn.addEventListener('click', () => {
-                const formData = new FormData(postForm);
-                const postId = document.getElementById('post_id').value;
-                const isNew = postId === '';
-                
-                const endpoint = 'http://localhost/admisoft/admin/process/post-process.php';
-                const method = isNew ? 'POST' : 'PATCH';
-                
-                if (!isNew) {
-                    formData.append('post_id', postId);
-                }
-                
-                fetch(endpoint, {
-                    method: method,
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Succès',
-                            text: isNew ? 'Article créé avec succès' : 'Article mis à jour avec succès',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                        postFormModal.classList.add('hidden');
-                        loadPosts();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: data.error || (isNew ? 'Erreur lors de la création' : 'Erreur lors de la mise à jour'),
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: isNew ? 'Erreur lors de la création' : 'Erreur lors de la mise à jour',
-                    });
+        // Fetch dashboard stats from API
+        async function fetchDashboardStats() {
+            try {
+                const response = await fetch('http://localhost/admisoft/admin/index.php', {
+                    credentials: 'include' // Pour inclure les cookies si nécessaire
                 });
-            });
-
-            // Annuler et fermer le modal
-            cancelPostBtn.addEventListener('click', () => {
-                postFormModal.classList.add('hidden');
-            });
-
-            // Suppression d'un article
-            $(document).on('click', '.delete-btn', function() {
-                const postId = $(this).data('id');
                 
+                if (!response.ok) {
+                    throw new Error('Erreur de réseau');
+                }
+                
+                const data = await response.json();
+                
+                // Update dashboard stats avec les données de l'API
+                document.getElementById('categories-count').textContent = data.categories;
+                document.getElementById('products-count').textContent = data.products;
+                document.getElementById('customers-count').textContent = data.customers;
+                document.getElementById('administrators-count').textContent = data.administrators;
+                document.getElementById('completed-orders-count').textContent = data.completed_orders;
+                document.getElementById('pending-orders-count').textContent = data.pending_orders;
+                
+                return data;
+            } catch (error) {
+                console.error('Erreur:', error);
                 Swal.fire({
-                    title: 'Confirmer la suppression',
-                    text: "Êtes-vous sûr de vouloir supprimer cet article?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#4F46E5',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Oui, supprimer!',
-                    cancelButtonText: 'Annuler'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`http://localhost/admisoft/admin/process/post-process.php?id=${postId}`, {
-                            method: 'DELETE'
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Supprimé!',
-                                    text: 'L\'article a été supprimé.',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                                loadPosts();
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erreur',
-                                    text: data.error || 'Erreur lors de la suppression',
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Erreur',
-                                text: 'Erreur lors de la suppression',
-                            });
-                        });
-                    }
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Impossible de charger les données du dashboard',
                 });
+                return null;
+            }
+        }
+
+        // Fetch orders data from API
+        async function fetchOrdersData() {
+            try {
+                // Ici vous devriez créer un endpoint spécifique pour les commandes
+                // Par exemple: localhost/admisoft/admin/orders.php
+                // Pour cet exemple, je simule des données
+                const response = await fetch('http://localhost/admisoft/admin/index.php', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erreur de réseau');
+                }
+                
+                // Dans la réalité, vous devriez avoir un endpoint qui retourne les commandes
+                // Je garde la simulation pour l'exemple
+                const stats = await response.json();
+                
+                // Simuler des données de commandes basées sur les stats
+                const data = [
+                    {
+                        id: '#ADM-' + (Math.floor(Math.random() * 900) + 100),
+                        customer: 'Client ' + (Math.floor(Math.random() * 100) + 1),
+                        date: new Date().toLocaleDateString('fr-FR'),
+                        amount: '€' + (Math.floor(Math.random() * 500) + 50) + '.' + (Math.floor(Math.random() * 99)).toString().padStart(2, '0'),
+                        status: Math.random() > 0.5 ? 'Livré' : 'En cours'
+                    },
+                    // Ajoutez plus de commandes simulées si nécessaire
+                ];
+                
+                // Populate orders table
+                const ordersTableBody = document.getElementById('orders-table-body');
+                ordersTableBody.innerHTML = '';
+                
+                data.forEach(order => {
+                    let statusColor, statusText;
+                    
+                    if (order.status === 'Livré') {
+                        statusColor = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+                        statusText = order.status;
+                    } else if (order.status === 'En cours') {
+                        statusColor = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+                        statusText = order.status;
+                    } else {
+                        statusColor = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+                        statusText = order.status;
+                    }
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${order.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${order.customer}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${order.date}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${order.amount}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${statusColor}">${statusText}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex space-x-2 justify-end">
+                                <button class="p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200" title="Voir">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="p-1.5 rounded-md bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors duration-200" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="p-1.5 rounded-md bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors duration-200" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    ordersTableBody.appendChild(row);
+                });
+                
+                return data;
+            } catch (error) {
+                console.error('Erreur:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Impossible de charger les données des commandes',
+                });
+                return null;
+            }
+        }
+
+        // Initialize DataTable and fetch all data
+        $(document).ready(async function() {
+            // Initialize DataTable
+            const dataTable = $('#orders-table').DataTable({
+                // ... (configuration DataTable reste identique) ...
+            });
+            
+            // Initialize charts
+            // ... (configuration des graphiques reste identique) ...
+            
+            // Update last update time
+            function updateLastUpdateTime() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                document.getElementById('last-update').textContent = now.toLocaleDateString('fr-FR', options);
+            }
+            
+            // Fetch and display all data
+            await fetchDashboardStats();
+            await fetchOrdersData();
+            updateLastUpdateTime();
+            
+            // Show success notification
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            
+            Toast.fire({
+                icon: 'success',
+                title: 'Données mises à jour',
+                background: '#0298e4',
+                color: '#fff',
+                iconColor: '#fff'
             });
         });
     </script>
