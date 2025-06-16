@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Messages - ADMISOFT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        admisoft: {
+                            DEFAULT: '#4F46E5',
+                            dark: '#4338CA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
+            }
+            .sidebar-mobile.open {
+                transform: translateX(0);
+            }
+            .overlay {
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+                position: fixed;
+                z-index: 40;
+            }
+            .overlay.open {
+                opacity: 1;
+                visibility: visible;
+            }
+            .message-container {
+                flex-direction: column;
+            }
+            .conversation-list {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .message-content {
+                width: 100%;
+            }
+        }
+        .message-container {
+            display: flex;
+            height: calc(100vh - 200px);
+        }
+        .conversation-list {
+            width: 300px;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+        }
+        .message-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .message-input {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .sent {
+            align-self: flex-end;
+            background-color: #4F46E5;
+            color: white;
+        }
+        .received {
+            align-self: flex-start;
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+        .dark .received {
+            background-color: #374151;
+            color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-full">
+    <div class="min-h-screen flex flex-col">
+        <!-- Navbar -->
+        <nav class="bg-white dark:bg-gray-800 shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div class="flex-shrink-0 flex items-center ml-4">
+                            <i class="fas fa-cube text-admisoft dark:text-admisoft-dark text-2xl mr-2"></i>
+                            <span class="text-xl font-bold text-gray-900 dark:text-white">ADMISOFT</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-moon dark:hidden"></i>
+                            <i class="fas fa-sun hidden dark:block"></i>
+                        </button>
+                        <button onclick="window.open('https://www.admisoft.com', '_blank')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Visiter notre site web">
+                            <i class="fas fa-eye text-admisoft dark:text-admisoft-dark"></i>
+                        </button>
+                        <div class="relative">
+                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Overlay pour fermer le menu sur mobile -->
+            <div id="sidebar-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
+
+            <!-- Sidebar -->
+            <div id="sidebar" class="sidebar-mobile fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-shrink-0 h-full transition-transform duration-200 ease-in-out md:translate-x-0">
+                <div class="h-full flex flex-col pt-5 pb-4 overflow-y-auto">
+                    <nav class="flex-1 px-2 space-y-1">
+                        <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-tachometer-alt mr-3 flex-shrink-0"></i>
+                            Dashboard
+                        </a>
+                        <a href="category.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-project-diagram mr-3 flex-shrink-0"></i>
+                            Catégories
+                        </a>
+                        <a href="color.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-palette mr-3 flex-shrink-0"></i>
+                            Couleurs
+                        </a>
+                        <a href="customer.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-users mr-3 flex-shrink-0"></i>
+                            Clients
+                        </a>
+                        <a href="message.html" class="bg-gray-100 dark:bg-gray-700 text-admisoft dark:text-admisoft-dark group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-envelope mr-3 flex-shrink-0"></i>
+                            Messages
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-shopping-cart mr-3 flex-shrink-0"></i>
+                            Commandes
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-newspaper mr-3 flex-shrink-0"></i>
+                            Articles
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-box-open mr-3 flex-shrink-0"></i>
+                            Produits
+                        </a>
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-concierge-bell mr-3 flex-shrink-0"></i>
+                            Services
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto focus:outline-none">
+                <div class="py-6">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Messagerie</h1>
+                    </div>
+                    
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+                            <div class="message-container">
+                                <!-- Liste des conversations -->
+                                <div class="conversation-list dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="p-4 border-b dark:border-gray-700">
+                                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Conversations</h2>
+                                    </div>
+                                    <div id="conversations-list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                            Chargement des conversations...
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Contenu des messages -->
+                                <div class="message-content dark:bg-gray-800">
+                                    <div id="messages-header" class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                                        <h2 id="current-conversation" class="text-lg font-semibold text-gray-900 dark:text-white">Sélectionnez une conversation</h2>
+                                        <div id="conversation-actions" class="hidden">
+                                            <button id="delete-conversation" class="p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="messages" class="messages">
+                                        <div id="no-conversation" class="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
+                                            Sélectionnez une conversation pour afficher les messages
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="message-input" class="message-input hidden dark:border-gray-700">
+                                        <form id="send-message-form" class="flex space-x-2">
+                                            <input type="hidden" id="receiver_id">
+                                            <div class="flex-1">
+                                                <input type="text" id="message-text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Écrivez un message...">
+                                            </div>
+                                            <div class="relative">
+                                                <input type="file" id="message-attachment" class="hidden" accept="image/*">
+                                                <label for="message-attachment" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                                                    <i class="fas fa-paperclip"></i>
+                                                </label>
+                                            </div>
+                                            <button type="submit" class="px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-800 transition duration-300">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion du menu mobile
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        mobileMenuButton.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Fermer le menu quand on clique sur un lien (mobile seulement)
+        document.querySelectorAll('#sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Dark mode toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            html.classList.toggle('dark');
+            localStorage.setItem('color-theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Initialisation de la messagerie
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentConversationId = null;
+            const adminId = 1; // À remplacer par l'ID réel de l'admin connecté
+
+            // Fonction pour charger les conversations depuis l'API
+            async function loadConversations() {
+                try {
+                    const response = await fetch('http://localhost/admisoft/admin/process/message-process.php?conversations=true');
+                    if (!response.ok) throw new Error('Erreur réseau');
+                    
+                    const conversations = await response.json();
+                    const conversationsList = document.getElementById('conversations-list');
+                    
+                    conversationsList.innerHTML = '';
+
+                    if (conversations.length === 0) {
+                        conversationsList.innerHTML = `
+                            <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                Aucune conversation disponible
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    conversations.forEach(conv => {
+                        const unreadBadge = conv.unread_count > 0 
+                            ? `<span class="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-admisoft dark:bg-admisoft-dark text-white text-xs">${conv.unread_count}</span>`
+                            : '';
+
+                        const conversationItem = document.createElement('div');
+                        conversationItem.className = 'p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center conversation-item';
+                        conversationItem.dataset.id = conv.id;
+                        conversationItem.innerHTML = `
+                            <div>
+                                <h3 class="font-medium text-gray-900 dark:text-white">${conv.participant_name}</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">${conv.last_message || 'Aucun message'}</p>
+                            </div>
+                            ${unreadBadge}
+                        `;
+                        conversationsList.appendChild(conversationItem);
+                    });
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Impossible de charger les conversations',
+                    });
+                }
+            }
+
+            // Fonction pour charger les messages d'une conversation depuis l'API
+            async function loadMessages(conversationId) {
+                try {
+                    currentConversationId = conversationId;
+                    const response = await fetch(`http://localhost/admisoft/admin/process/message-process.php?id=${conversationId}`);
+                    if (!response.ok) throw new Error('Erreur réseau');
+                    
+                    const messages = await response.json();
+                    const messagesContainer = document.getElementById('messages');
+                    
+                    // Mettre à jour l'interface
+                    document.getElementById('current-conversation').textContent = 'Chargement...';
+                    document.getElementById('conversation-actions').classList.remove('hidden');
+                    document.getElementById('message-input').classList.remove('hidden');
+                    document.getElementById('no-conversation').classList.add('hidden');
+                    document.getElementById('receiver_id').value = conversationId;
+
+                    // Récupérer le nom du participant
+                    const convResponse = await fetch('http://localhost/admisoft/admin/process/message-process.php?conversations=true');
+                    const conversations = await convResponse.json();
+                    const conversation = conversations.find(c => c.id == conversationId);
+                    
+                    if (conversation) {
+                        document.getElementById('current-conversation').textContent = conversation.participant_name;
+                    }
+
+                    messagesContainer.innerHTML = '';
+
+                    if (messages.length === 0) {
+                        messagesContainer.innerHTML = `
+                            <div class="text-center text-gray-500 dark:text-gray-400 py-4">
+                                Aucun message dans cette conversation
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    messages.forEach(msg => {
+                        const isSent = msg.sender_id == adminId;
+                        const date = new Date(msg.created_at);
+                        const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        const messageBubble = document.createElement('div');
+                        messageBubble.className = `message-bubble ${isSent ? 'sent' : 'received'}`;
+                        messageBubble.innerHTML = `
+                            ${msg.content ? `<div class="text-sm">${msg.content}</div>` : ''}
+                            ${msg.attachment ? `<img src="${msg.attachment}" class="mt-2 rounded max-w-full h-auto" alt="Pièce jointe">` : ''}
+                            <div class="text-xs mt-1 ${isSent ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'} text-right">${timeString}</div>
+                        `;
+                        messagesContainer.appendChild(messageBubble);
+                    });
+
+                    // Faire défiler vers le bas pour voir les derniers messages
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Impossible de charger les messages',
+                    });
+                }
+            }
+
+            // Envoyer un message
+            document.getElementById('send-message-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const message = document.getElementById('message-text').value.trim();
+                const receiverId = document.getElementById('receiver_id').value;
+                const attachment = document.getElementById('message-attachment').files[0];
+
+                if (!message && !attachment) {
+                    return;
+                }
+
+                try {
+                    const formData = new FormData();
+                    formData.append('receiver_id', receiverId);
+                    formData.append('message', message);
+                    if (attachment) {
+                        formData.append('image_path', attachment);
+                    }
+
+                    const response = await fetch('http://localhost/admisoft/admin/process/message-process.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        document.getElementById('message-text').value = '';
+                        document.getElementById('message-attachment').value = '';
+                        await loadMessages(currentConversationId);
+                        await loadConversations(); // Rafraîchir la liste des conversations
+                    } else {
+                        throw new Error(data.error || 'Erreur lors de l\'envoi du message');
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: error.message || 'Erreur lors de l\'envoi du message',
+                    });
+                }
+            });
+
+            // Supprimer une conversation
+            document.getElementById('delete-conversation').addEventListener('click', async function() {
+                if (!currentConversationId) return;
+
+                const { isConfirmed } = await Swal.fire({
+                    title: 'Confirmer la suppression',
+                    text: "Êtes-vous sûr de vouloir supprimer cette conversation?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#4F46E5',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, supprimer!',
+                    cancelButtonText: 'Annuler'
+                });
+
+                if (isConfirmed) {
+                    try {
+                        const response = await fetch('http://localhost/admisoft/admin/process/message-process.php', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ id: currentConversationId })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Supprimé!',
+                                text: 'La conversation a été supprimée.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                            
+                            // Réinitialiser l'interface
+                            currentConversationId = null;
+                            document.getElementById('current-conversation').textContent = 'Sélectionnez une conversation';
+                            document.getElementById('conversation-actions').classList.add('hidden');
+                            document.getElementById('message-input').classList.add('hidden');
+                            document.getElementById('no-conversation').classList.remove('hidden');
+                            document.getElementById('messages').innerHTML = '';
+                            
+                            // Recharger les conversations
+                            await loadConversations();
+                        } else {
+                            throw new Error(data.error || 'Erreur lors de la suppression de la conversation');
+                        }
+                    } catch (error) {
+                        console.error('Erreur:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: error.message || 'Erreur lors de la suppression de la conversation',
+                        });
+                    }
+                }
+            });
+
+            // Sélectionner une conversation
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.conversation-item')) {
+                    const conversationId = e.target.closest('.conversation-item').dataset.id;
+                    loadMessages(conversationId);
+                }
+            });
+
+            // Chargement initial des conversations
+            loadConversations();
+        });
+    </script>
+</body>
+</html>
