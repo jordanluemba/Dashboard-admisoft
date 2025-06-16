@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Catégories - ADMISOFT</title>
+    <title>Gestion des Clients - ADMISOFT</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -41,7 +41,6 @@
         }
     </script>
     <style>
-        /* Animation pour le menu mobile */
         @media (max-width: 767px) {
             .sidebar-mobile {
                 transform: translateX(-100%);
@@ -73,7 +72,6 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <!-- Bouton hamburger (visible seulement sur mobile) -->
                         <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
@@ -103,7 +101,7 @@
             <!-- Overlay pour fermer le menu sur mobile -->
             <div id="sidebar-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
 
-            <!-- Sidebar - Visible par défaut sur grand écran -->
+            <!-- Sidebar -->
             <div id="sidebar" class="sidebar-mobile fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-shrink-0 h-full transition-transform duration-200 ease-in-out md:translate-x-0">
                 <div class="h-full flex flex-col pt-5 pb-4 overflow-y-auto">
                     <nav class="flex-1 px-2 space-y-1">
@@ -111,37 +109,37 @@
                             <i class="fas fa-tachometer-alt mr-3 flex-shrink-0"></i>
                             Dashboard
                         </a>
-                        <a href="#" class="bg-gray-100 dark:bg-gray-700 text-admisoft dark:text-admisoft-dark group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="category.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-project-diagram mr-3 flex-shrink-0"></i>
-                            Category-process
+                            Catégories
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="color.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-palette mr-3 flex-shrink-0"></i>
-                            Color
+                            Couleurs
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="customer.html" class="bg-gray-100 dark:bg-gray-700 text-admisoft dark:text-admisoft-dark group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-users mr-3 flex-shrink-0"></i>
-                            Customer
+                            Clients
                         </a>
                         <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-envelope mr-3 flex-shrink-0"></i>
-                            Message
+                            Messages
                         </a>
                         <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-shopping-cart mr-3 flex-shrink-0"></i>
-                            Order
+                            Commandes
                         </a>
                         <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-newspaper mr-3 flex-shrink-0"></i>
-                            Post
+                            Articles
                         </a>
                         <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-box-open mr-3 flex-shrink-0"></i>
-                            Product
+                            Produits
                         </a>
                         <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-concierge-bell mr-3 flex-shrink-0"></i>
-                            Service
+                            Services
                         </a>
                     </nav>
                 </div>
@@ -152,22 +150,25 @@
                 <div class="py-6">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between items-center">
-                            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Catégories</h1>
-                            <button id="addCategoryBtn" class="px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-800 transition duration-300">
+                            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Clients</h1>
+                            <button id="addCustomerBtn" class="px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-800 transition duration-300">
                                 <i class="fas fa-plus mr-2"></i> Ajouter
                             </button>
                         </div>
                     </div>
                     
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                        <!-- Categories Table -->
+                        <!-- Customers Table -->
                         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                             <div class="overflow-x-auto">
-                                <table id="categories-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <table id="customers-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Téléphone</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Statut</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                                         </tr>
                                     </thead>
@@ -183,25 +184,68 @@
         </div>
     </div>
 
-    <!-- Add Category Modal -->
-    <div id="addCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <!-- Add Customer Modal -->
+    <div id="addCustomerModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                 <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Ajouter une catégorie</h3>
-                    <div class="mt-2">
-                        <input type="text" id="categoryName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la catégorie">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Ajouter un client</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="firstname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prénom</label>
+                            <input type="text" id="firstname" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="lastname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom</label>
+                            <input type="text" id="lastname" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                            <input type="email" id="email" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone</label>
+                            <input type="text" id="phone" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mot de passe</label>
+                            <input type="password" id="password" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cust_plot" class="block text-sm font-medium text-gray-700 dark:text-gray-300">N° Parcelle</label>
+                            <input type="text" id="cust_plot" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cust_street" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rue</label>
+                            <input type="text" id="cust_street" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cust_quarter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quartier</label>
+                            <input type="text" id="cust_quarter" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cust_commune" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Commune</label>
+                            <input type="text" id="cust_commune" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cust_city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ville</label>
+                            <input type="text" id="cust_city" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="cust_country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pays</label>
+                            <input type="text" id="cust_country" class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white">
+                        </div>
                     </div>
                 </div>
                 <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="confirmAddCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="confirmAddCustomer" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
                         Enregistrer
                     </button>
-                    <button type="button" id="cancelAddCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="cancelAddCustomer" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Annuler
                     </button>
                 </div>
@@ -209,27 +253,75 @@
         </div>
     </div>
 
-    <!-- Edit Category Modal -->
-    <div id="editCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <!-- View Customer Modal -->
+    <div id="viewCustomerModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                 <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Modifier la catégorie</h3>
-                    <div class="mt-2">
-                        <input type="hidden" id="editCategoryId">
-                        <input type="text" id="editCategoryName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la catégorie">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Détails du client</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Prénom</label>
+                            <p id="view-firstname" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nom</label>
+                            <p id="view-lastname" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                            <p id="view-email" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Téléphone</label>
+                            <p id="view-phone" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Statut</label>
+                            <p id="view-status" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date création</label>
+                            <p id="view-created_at" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h4 class="text-md font-medium text-gray-900 dark:text-white mb-2">Adresse</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">N° Parcelle</label>
+                                    <p id="view-plot" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rue</label>
+                                    <p id="view-street" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quartier</label>
+                                    <p id="view-quarter" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Commune</label>
+                                    <p id="view-commune" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ville</label>
+                                    <p id="view-city" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pays</label>
+                                    <p id="view-country" class="mt-1 text-sm text-gray-900 dark:text-gray-200"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="confirmEditCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Enregistrer
-                    </button>
-                    <button type="button" id="cancelEditCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Annuler
+                    <button type="button" id="closeViewCustomer" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Fermer
                     </button>
                 </div>
             </div>
@@ -280,10 +372,10 @@
             localStorage.setItem('color-theme', html.classList.contains('dark') ? 'dark' : 'light');
         });
 
-        // Initialisation de DataTable et gestion CRUD
+        // Initialisation de DataTable et gestion CRUD pour les clients
         $(document).ready(function() {
             // Initialisation de DataTable
-            const table = $('#categories-table').DataTable({
+            const table = $('#customers-table').DataTable({
                 responsive: true,
                 language: {
                     "sEmptyTable": "Aucune donnée disponible dans le tableau",
@@ -310,21 +402,35 @@
                 }
             });
 
-            // Charger les catégories depuis l'API
-            function loadCategories() {
-                fetch('http://localhost/admisoft/admin/process/category-process.php')
+            // Charger les clients depuis l'API
+            function loadCustomers() {
+                fetch('http://localhost/admisoft/admin/process/customer-process.php')
                     .then(response => response.json())
                     .then(data => {
                         table.clear();
-                        data.forEach(category => {
+                        data.forEach(customer => {
+                            // Formater le statut
+                            let statusBadge = '';
+                            if (customer.status === 'active') {
+                                statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Actif</span>';
+                            } else {
+                                statusBadge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Inactif</span>';
+                            }
+
                             table.row.add([
-                                category.cat_id,
-                                category.cat_name,
+                                customer.id,
+                                customer.lastName + ' ' + customer.firtName,
+                                customer.email,
+                                customer.phone,
+                                statusBadge,
                                 `<div class="flex space-x-2">
-                                    <button class="edit-btn p-1 text-blue-600 hover:text-blue-900 dark:hover:text-blue-400" data-id="${category.cat_id}" data-name="${category.cat_name}">
+                                    <button class="view-btn p-1 text-blue-600 hover:text-blue-900 dark:hover:text-blue-400" data-id="${customer.id}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="edit-btn p-1 text-green-600 hover:text-green-900 dark:hover:text-green-400" data-id="${customer.id}">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="delete-btn p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400" data-id="${category.cat_id}">
+                                    <button class="delete-btn p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400" data-id="${customer.id}">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>`
@@ -336,22 +442,34 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Erreur',
-                            text: 'Impossible de charger les catégories',
+                            text: 'Impossible de charger les clients',
                         });
                     });
             }
 
             // Chargement initial
-            loadCategories();
+            loadCustomers();
 
-            // Gestion de l'ajout de catégorie
-            const addModal = document.getElementById('addCategoryModal');
-            const addBtn = document.getElementById('addCategoryBtn');
-            const confirmAddBtn = document.getElementById('confirmAddCategory');
-            const cancelAddBtn = document.getElementById('cancelAddCategory');
+            // Gestion de l'ajout de client
+            const addModal = document.getElementById('addCustomerModal');
+            const addBtn = document.getElementById('addCustomerBtn');
+            const confirmAddBtn = document.getElementById('confirmAddCustomer');
+            const cancelAddBtn = document.getElementById('cancelAddCustomer');
 
             addBtn.addEventListener('click', () => {
-                document.getElementById('categoryName').value = '';
+                // Réinitialiser les champs
+                document.getElementById('firstname').value = '';
+                document.getElementById('lastname').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('cust_plot').value = '';
+                document.getElementById('cust_street').value = '';
+                document.getElementById('cust_quarter').value = '';
+                document.getElementById('cust_commune').value = '';
+                document.getElementById('cust_city').value = '';
+                document.getElementById('cust_country').value = '';
+                
                 addModal.classList.remove('hidden');
             });
 
@@ -360,22 +478,46 @@
             });
 
             confirmAddBtn.addEventListener('click', () => {
-                const name = document.getElementById('categoryName').value.trim();
-                if (!name) {
+                // Récupérer les valeurs des champs
+                const firstname = document.getElementById('firstname').value.trim();
+                const lastname = document.getElementById('lastname').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const cust_plot = document.getElementById('cust_plot').value.trim();
+                const cust_street = document.getElementById('cust_street').value.trim();
+                const cust_quarter = document.getElementById('cust_quarter').value.trim();
+                const cust_commune = document.getElementById('cust_commune').value.trim();
+                const cust_city = document.getElementById('cust_city').value.trim();
+                const cust_country = document.getElementById('cust_country').value.trim();
+
+                // Validation des champs requis
+                if (!firstname || !lastname || !email || !phone || !password) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Veuillez entrer un nom de catégorie',
+                        text: 'Veuillez remplir tous les champs obligatoires',
                     });
                     return;
                 }
 
-                fetch('http://localhost/admisoft/admin/process/category-process.php', {
+                // Préparer les données à envoyer
+                const formData = new FormData();
+                formData.append('firstname', firstname);
+                formData.append('lastname', lastname);
+                formData.append('email', email);
+                formData.append('phone', phone);
+                formData.append('password', password);
+                formData.append('cust_plot', cust_plot);
+                formData.append('cust_street', cust_street);
+                formData.append('cust_quarter', cust_quarter);
+                formData.append('cust_commune', cust_commune);
+                formData.append('cust_city', cust_city);
+                formData.append('cust_country', cust_country);
+
+                fetch('http://localhost/admisoft/admin/process/customer-process.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ cat_name: name })
+                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -383,17 +525,17 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Succès',
-                            text: 'Catégorie ajoutée avec succès',
+                            text: 'Client ajouté avec succès',
                             timer: 1500,
                             showConfirmButton: false
                         });
                         addModal.classList.add('hidden');
-                        loadCategories();
+                        loadCustomers();
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Erreur',
-                            text: data.error || 'Erreur lors de l\'ajout de la catégorie',
+                            text: data.error || 'Erreur lors de l\'ajout du client',
                         });
                     }
                 })
@@ -402,90 +544,60 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Erreur lors de l\'ajout de la catégorie',
+                        text: 'Erreur lors de l\'ajout du client',
                     });
                 });
             });
 
-            // Gestion de la modification de catégorie
-            const editModal = document.getElementById('editCategoryModal');
-            const confirmEditBtn = document.getElementById('confirmEditCategory');
-            const cancelEditBtn = document.getElementById('cancelEditCategory');
+            // Gestion de la visualisation des détails du client
+            const viewModal = document.getElementById('viewCustomerModal');
+            const closeViewBtn = document.getElementById('closeViewCustomer');
 
-            // Gestion des clics sur les boutons d'édition
-            $(document).on('click', '.edit-btn', function() {
+            $(document).on('click', '.view-btn', function() {
                 const id = $(this).data('id');
-                const name = $(this).data('name');
                 
-                document.getElementById('editCategoryId').value = id;
-                document.getElementById('editCategoryName').value = name;
-                editModal.classList.remove('hidden');
-            });
-
-            cancelEditBtn.addEventListener('click', () => {
-                editModal.classList.add('hidden');
-            });
-
-            confirmEditBtn.addEventListener('click', () => {
-                const id = document.getElementById('editCategoryId').value;
-                const name = document.getElementById('editCategoryName').value.trim();
-                
-                if (!name) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Veuillez entrer un nom de catégorie',
-                    });
-                    return;
-                }
-
-                fetch('http://localhost/admisoft/admin/process/category-process.php', {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        cat_id: id,
-                        cat_name: name 
+                fetch(`http://localhost/admisoft/admin/process/customer-process.php?id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remplir les champs du modal
+                        document.getElementById('view-firstname').textContent = data.firtName;
+                        document.getElementById('view-lastname').textContent = data.lastName;
+                        document.getElementById('view-email').textContent = data.email;
+                        document.getElementById('view-phone').textContent = data.phone;
+                        document.getElementById('view-status').textContent = data.status === 1 ? 'Actif' : 'Inactif';
+                        document.getElementById('view-created_at').textContent = new Date(data.dateCreation).toLocaleDateString();
+                        
+                        // Adresse
+                        document.getElementById('view-plot').textContent = data.plot || 'N/A';
+                        document.getElementById('view-street').textContent = data.street || 'N/A';
+                        document.getElementById('view-quarter').textContent = data.quarter || 'N/A';
+                        document.getElementById('view-commune').textContent = data.commune || 'N/A';
+                        document.getElementById('view-city').textContent = data.city || 'N/A';
+                        document.getElementById('view-country').textContent = data.country || 'N/A';
+                        
+                        viewModal.classList.remove('hidden');
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Succès',
-                            text: 'Catégorie modifiée avec succès',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                        editModal.classList.add('hidden');
-                        loadCategories();
-                    } else {
+                    .catch(error => {
+                        console.error('Error:', error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Erreur',
-                            text: data.error || 'Erreur lors de la modification de la catégorie',
+                            text: 'Impossible de charger les détails du client',
                         });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Erreur lors de la modification de la catégorie',
                     });
-                });
             });
 
-            // Gestion de la suppression de catégorie
+            closeViewBtn.addEventListener('click', () => {
+                viewModal.classList.add('hidden');
+            });
+
+            // Gestion de la suppression de client
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Confirmer la suppression',
-                    text: "Êtes-vous sûr de vouloir supprimer cette catégorie?",
+                    text: "Êtes-vous sûr de vouloir supprimer ce client?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#4F46E5',
@@ -494,7 +606,7 @@
                     cancelButtonText: 'Annuler'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('http://localhost/admisoft/admin/process/category-process.php', {
+                        fetch('http://localhost/admisoft/admin/process/customer-process.php', {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -507,16 +619,16 @@
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Supprimé!',
-                                    text: 'La catégorie a été supprimée.',
+                                    text: 'Le client a été supprimé.',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
-                                loadCategories();
+                                loadCustomers();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Erreur',
-                                    text: data.error || 'Erreur lors de la suppression de la catégorie',
+                                    text: data.error || 'Erreur lors de la suppression du client',
                                 });
                             }
                         })
@@ -525,7 +637,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Erreur',
-                                text: 'Erreur lors de la suppression de la catégorie',
+                                text: 'Erreur lors de la suppression du client',
                             });
                         });
                     }
