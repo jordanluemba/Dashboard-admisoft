@@ -8,90 +8,72 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- DataTables -->
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        admisoft: {
-                            DEFAULT: '#4F46E5',
-                            dark: '#4338CA'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Animation pour le menu mobile */
-        @media (max-width: 767px) {
-            .sidebar-mobile {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-                position: fixed;
-                z-index: 50;
-            }
-            .sidebar-mobile.open {
-                transform: translateX(0);
-            }
-            .overlay {
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-                position: fixed;
-                z-index: 40;
-            }
-            .overlay.open {
-                opacity: 1;
-                visibility: visible;
-            }
+        .sidebar-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        .hamburger-line {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .dark .card-hover:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-full">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-        <nav class="bg-white dark:bg-gray-800 shadow-md">
+        <nav class="bg-white dark:bg-gray-800 shadow-md relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <!-- Bouton hamburger (visible seulement sur mobile) -->
-                        <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div class="flex-shrink-0 flex items-center ml-4">
-                            <i class="fas fa-cube text-admisoft dark:text-admisoft-dark text-2xl mr-2"></i>
-                            <span class="text-xl font-bold text-gray-900 dark:text-white">ADMISOFT</span>
+                        <!-- Mobile menu button -->
+                        <div class="flex-shrink-0 flex items-center md:hidden">
+                            <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                                <span class="sr-only">Ouvrir le menu</span>
+                                <div id="hamburger" class="space-y-2">
+                                    <span class="hamburger-line block w-6 h-0.5 bg-current"></span>
+                                    <span class="hamburger-line block w-6 h-0.5 bg-current"></span>
+                                    <span class="hamburger-line block w-6 h-0.5 bg-current"></span>
+                                </div>
+                                <div id="close" class="hidden relative w-6 h-6">
+                                    <span class="hamburger-line absolute top-1/2 left-0 block w-6 h-0.5 bg-current"></span>
+                                    <span class="hamburger-line absolute top-1/2 left-0 block w-6 h-0.5 bg-current"></span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="flex-shrink-0 flex items-center">
+                            <a href="#" class="flex items-center" aria-label="AdmiSoft - Retour à l'accueil">
+                                <button class="flex items-center px-5 py-2 rounded-full bg-gradient-to-tr from-[#051769] to-[#0298e4] shadow-lg hover:scale-105 transition-all duration-200 border-2 border-white dark:border-gray-900 focus:outline-none">
+                                    <span class="text-white font-extrabold text-xl tracking-wide drop-shadow">AdmiSoft</span>
+                                </button>
+                            </a>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i class="fas fa-moon dark:hidden"></i>
-                            <i class="fas fa-sun hidden dark:block"></i>
+                        <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                            <i class="fas fa-moon dark:hidden text-admisoft"></i>
+                            <i class="fas fa-sun hidden dark:block text-admisoft-light"></i>
                         </button>
-                        <button onclick="window.open('https://www.admisoft.com', '_blank')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Visiter notre site web">
-                            <i class="fas fa-eye text-admisoft dark:text-admisoft-dark"></i>
+                        <button onclick="window.open('https://www.admisoft.com', '_blank')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" title="Visiter notre site web">
+                            <i class="fas fa-eye text-admisoft dark:text-admisoft-light"></i>
                         </button>
-                        <div class="relative">
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        <div class="relative group">
+                            <img class="h-8 w-8 rounded-full cursor-pointer" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                            <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Votre profil</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Paramètres</a>
+                                <a href="#" id="logout-btn" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Déconnexion</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,53 +81,59 @@
         </nav>
 
         <!-- Main Content -->
-        <div class="flex-1 flex overflow-hidden">
-            <!-- Overlay pour fermer le menu sur mobile -->
-            <div id="sidebar-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
+        <div class="flex-1 flex overflow-hidden relative">
+            <!-- Sidebar Backdrop (mobile) -->
+            <div id="sidebar-backdrop" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-20 hidden md:hidden"></div>
 
-            <!-- Sidebar - Visible par défaut sur grand écran -->
-            <div id="sidebar" class="sidebar-mobile fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-shrink-0 h-full transition-transform duration-200 ease-in-out md:translate-x-0">
-                <div class="h-full flex flex-col pt-5 pb-4 overflow-y-auto">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar-transition transform -translate-x-full md:translate-x-0 fixed md:static inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+                <div class="flex flex-col h-full pt-5 pb-4">
+                    <div class="flex items-center justify-between px-4 mb-8">
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Menu</h2>
+                        <button id="close-sidebar" class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                     <nav class="flex-1 px-2 space-y-1">
-                        <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="index.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-tachometer-alt mr-3 flex-shrink-0"></i>
-                            Dashboard
+                            Tableau de bord
                         </a>
-                        <a href="#" class="bg-gray-100 dark:bg-gray-700 text-admisoft dark:text-admisoft-dark group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 bg-gradient-to-r from-admisoft/10 to-admisoft/5 dark:from-admisoft-dark/20 dark:to-admisoft-dark/10 text-admisoft dark:text-admisoft-light border-l-4 border-admisoft dark:border-admisoft-light">
                             <i class="fas fa-project-diagram mr-3 flex-shrink-0"></i>
-                            Category-process
+                            Catégories
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-palette mr-3 flex-shrink-0"></i>
-                            Color
+                            Couleurs
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-users mr-3 flex-shrink-0"></i>
-                            Customer
+                            Clients
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-envelope mr-3 flex-shrink-0"></i>
-                            Message
+                            Messages
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-shopping-cart mr-3 flex-shrink-0"></i>
-                            Order
+                            Commandes
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-newspaper mr-3 flex-shrink-0"></i>
-                            Post
+                            Posts
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-box-open mr-3 flex-shrink-0"></i>
-                            Product
+                            Produits
                         </a>
-                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <i class="fas fa-concierge-bell mr-3 flex-shrink-0"></i>
-                            Service
+                            Services
                         </a>
                     </nav>
                 </div>
-            </div>
+            </aside>
 
             <!-- Content Area -->
             <div class="flex-1 overflow-auto focus:outline-none">
@@ -153,9 +141,11 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between items-center">
                             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Catégories</h1>
-                            <button id="addCategoryBtn" class="px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-800 transition duration-300">
-                                <i class="fas fa-plus mr-2"></i> Ajouter
-                            </button>
+                            <div class="flex items-center space-x-4">
+                                <button id="addCategoryBtn" class="px-4 py-2 bg-gradient-to-r from-admisoft to-admisoft-dark text-white rounded-md hover:shadow-lg transition duration-300">
+                                    <i class="fas fa-plus mr-2"></i> Ajouter
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -198,10 +188,10 @@
                     </div>
                 </div>
                 <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="confirmAddCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="confirmAddCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-admisoft to-admisoft-dark text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
                         Enregistrer
                     </button>
-                    <button type="button" id="cancelAddCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="cancelAddCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Annuler
                     </button>
                 </div>
@@ -225,10 +215,10 @@
                     </div>
                 </div>
                 <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="confirmEditCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="confirmEditCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-admisoft to-admisoft-dark text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
                         Enregistrer
                     </button>
-                    <button type="button" id="cancelEditCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="cancelEditCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Annuler
                     </button>
                 </div>
@@ -240,45 +230,95 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
-    
-    <script>
-        // Gestion du menu mobile
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        function toggleMenu() {
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('open');
-            document.body.classList.toggle('overflow-hidden');
+    <script>
+        // Configuration de base
+        const API_BASE_URL = 'http://localhost/admisoft/admin/process';
+        const CATEGORY_API_URL = `${API_BASE_URL}/category-process.php`;
+
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeSidebarButton = document.getElementById('close-sidebar');
+        const hamburger = document.getElementById('hamburger');
+        const close = document.getElementById('close');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            sidebarBackdrop.classList.remove('hidden');
+            hamburger.classList.add('hidden');
+            close.classList.remove('hidden');
+            document.querySelectorAll('#close span').forEach(span => {
+                span.classList.add('rotate-45', 'top-1/2');
+            });
         }
 
-        mobileMenuButton.addEventListener('click', toggleMenu);
-        overlay.addEventListener('click', toggleMenu);
-
-        // Fermer le menu quand on clique sur un lien (mobile seulement)
-        document.querySelectorAll('#sidebar a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 768) {
-                    toggleMenu();
-                }
+        function closeSidebar() {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
+            sidebarBackdrop.classList.add('hidden');
+            hamburger.classList.remove('hidden');
+            close.classList.add('hidden');
+            document.querySelectorAll('#close span').forEach(span => {
+                span.classList.remove('rotate-45', 'top-1/2');
             });
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (sidebar.classList.contains('-translate-x-full')) {
+                openSidebar();
+            } else {
+                closeSidebar();
+            }
         });
+
+        closeSidebarButton.addEventListener('click', closeSidebar);
+        sidebarBackdrop.addEventListener('click', closeSidebar);
 
         // Dark mode toggle
         const themeToggleBtn = document.getElementById('theme-toggle');
         const html = document.documentElement;
 
+        // Check for saved user preference or use system preference
         if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             html.classList.add('dark');
         } else {
             html.classList.remove('dark');
         }
 
+        // Toggle theme
         themeToggleBtn.addEventListener('click', function() {
             html.classList.toggle('dark');
             localStorage.setItem('color-theme', html.classList.contains('dark') ? 'dark' : 'light');
         });
+
+        // Fonction pour faire les requêtes API avec gestion des erreurs
+        async function fetchAPI(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    ...options
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Erreur HTTP: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Erreur API:', error);
+                throw error;
+            }
+        }
 
         // Initialisation de DataTable et gestion CRUD
         $(document).ready(function() {
@@ -311,34 +351,33 @@
             });
 
             // Charger les catégories depuis l'API
-            function loadCategories() {
-                fetch('http://localhost/admisoft/admin/process/category-process.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        table.clear();
-                        data.forEach(category => {
-                            table.row.add([
-                                category.cat_id,
-                                category.cat_name,
-                                `<div class="flex space-x-2">
-                                    <button class="edit-btn p-1 text-blue-600 hover:text-blue-900 dark:hover:text-blue-400" data-id="${category.cat_id}" data-name="${category.cat_name}">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="delete-btn p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400" data-id="${category.cat_id}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>`
-                            ]).draw(false);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: 'Impossible de charger les catégories',
-                        });
+            async function loadCategories() {
+                try {
+                    const data = await fetchAPI(CATEGORY_API_URL);
+                    
+                    table.clear();
+                    data.forEach(category => {
+                        table.row.add([
+                            category.cat_id,
+                            category.cat_name,
+                            `<div class="flex space-x-2 justify-end">
+                                <button class="edit-btn p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200" data-id="${category.cat_id}" data-name="${category.cat_name}" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn p-1.5 rounded-md bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors duration-200" data-id="${category.cat_id}" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>`
+                        ]).draw(false);
                     });
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Impossible de charger les catégories',
+                    });
+                }
             }
 
             // Chargement initial
@@ -359,7 +398,7 @@
                 addModal.classList.add('hidden');
             });
 
-            confirmAddBtn.addEventListener('click', () => {
+            confirmAddBtn.addEventListener('click', async () => {
                 const name = document.getElementById('categoryName').value.trim();
                 if (!name) {
                     Swal.fire({
@@ -370,15 +409,12 @@
                     return;
                 }
 
-                fetch('http://localhost/admisoft/admin/process/category-process.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ cat_name: name })
-                })
-                .then(response => response.json())
-                .then(data => {
+                try {
+                    const data = await fetchAPI(CATEGORY_API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ cat_name: name })
+                    });
+                    
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
@@ -388,23 +424,18 @@
                             showConfirmButton: false
                         });
                         addModal.classList.add('hidden');
-                        loadCategories();
+                        await loadCategories();
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: data.error || 'Erreur lors de l\'ajout de la catégorie',
-                        });
+                        throw new Error(data.error || 'Erreur lors de l\'ajout de la catégorie');
                     }
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Erreur lors de l\'ajout de la catégorie',
+                        text: error.message,
                     });
-                });
+                }
             });
 
             // Gestion de la modification de catégorie
@@ -426,7 +457,7 @@
                 editModal.classList.add('hidden');
             });
 
-            confirmEditBtn.addEventListener('click', () => {
+            confirmEditBtn.addEventListener('click', async () => {
                 const id = document.getElementById('editCategoryId').value;
                 const name = document.getElementById('editCategoryName').value.trim();
                 
@@ -439,18 +470,15 @@
                     return;
                 }
 
-                fetch('http://localhost/admisoft/admin/process/category-process.php', {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        cat_id: id,
-                        cat_name: name 
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
+                try {
+                    const data = await fetchAPI(CATEGORY_API_URL, {
+                        method: 'PATCH',
+                        body: JSON.stringify({ 
+                            cat_id: id,
+                            cat_name: name 
+                        })
+                    });
+                    
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
@@ -460,30 +488,25 @@
                             showConfirmButton: false
                         });
                         editModal.classList.add('hidden');
-                        loadCategories();
+                        await loadCategories();
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: data.error || 'Erreur lors de la modification de la catégorie',
-                        });
+                        throw new Error(data.error || 'Erreur lors de la modification de la catégorie');
                     }
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Erreur lors de la modification de la catégorie',
+                        text: error.message,
                     });
-                });
+                }
             });
 
             // Gestion de la suppression de catégorie
-            $(document).on('click', '.delete-btn', function() {
+            $(document).on('click', '.delete-btn', async function() {
                 const id = $(this).data('id');
                 
-                Swal.fire({
+                const result = await Swal.fire({
                     title: 'Confirmer la suppression',
                     text: "Êtes-vous sûr de vouloir supprimer cette catégorie?",
                     icon: 'warning',
@@ -492,44 +515,36 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Oui, supprimer!',
                     cancelButtonText: 'Annuler'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('http://localhost/admisoft/admin/process/category-process.php', {
+                });
+
+                if (result.isConfirmed) {
+                    try {
+                        const data = await fetchAPI(CATEGORY_API_URL, {
                             method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
                             body: JSON.stringify({ id: id })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Supprimé!',
-                                    text: 'La catégorie a été supprimée.',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                });
-                                loadCategories();
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erreur',
-                                    text: data.error || 'Erreur lors de la suppression de la catégorie',
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
+                        });
+                        
+                        if (data.success) {
                             Swal.fire({
-                                icon: 'error',
-                                title: 'Erreur',
-                                text: 'Erreur lors de la suppression de la catégorie',
+                                icon: 'success',
+                                title: 'Supprimé!',
+                                text: 'La catégorie a été supprimée.',
+                                timer: 1500,
+                                showConfirmButton: false
                             });
+                            await loadCategories();
+                        } else {
+                            throw new Error(data.error || 'Erreur lors de la suppression de la catégorie');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: error.message,
                         });
                     }
-                });
+                }
             });
         });
     </script>
