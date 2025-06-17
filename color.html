@@ -153,9 +153,10 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between items-center">
                             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Couleurs</h1>
-                            <button id="addColorBtn" class="px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-800 transition duration-300">
-                                <i class="fas fa-plus mr-2"></i> Ajouter
-                            </button>
+                            <!-- Bouton Ajouter dans le header -->
+<button id="addColorBtn" class="px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-white rounded-md hover:shadow-lg transition duration-300">
+    <i class="fas fa-plus mr-2"></i> Ajouter
+</button
                         </div>
                     </div>
                     
@@ -198,13 +199,13 @@
                     </div>
                 </div>
                 <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="confirmAddColor" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Enregistrer
-                    </button>
-                    <button type="button" id="cancelAddColor" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Annuler
-                    </button>
-                </div>
+            <button type="button" id="confirmAddColor" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
+                Enregistrer
+            </button>
+            <button type="button" id="cancelAddColor" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                Annuler
+            </button>
+        </div>
             </div>
         </div>
     </div>
@@ -225,16 +226,21 @@
                     </div>
                 </div>
                 <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="confirmEditColor" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-admisoft dark:bg-admisoft-dark text-base font-medium text-white hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Enregistrer
-                    </button>
-                    <button type="button" id="cancelEditColor" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Annuler
-                    </button>
-                </div>
+            <button type="button" id="confirmEditColor" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
+                Enregistrer
+            </button>
+            <button type="button" id="cancelEditColor" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                Annuler
+            </button>
+        </div>
             </div>
         </div>
     </div>
+
+
+
+    
+
 
     <!-- DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
