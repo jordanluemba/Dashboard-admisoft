@@ -2,58 +2,66 @@
 <html lang="fr" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gestion des Catégories - ADMISOFT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Couleurs - ADMISOFT</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- DataTables CSS -->
+    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
-    <!-- SweetAlert2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        admisoft: {
+                            DEFAULT: '#4F46E5',
+                            dark: '#4338CA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        .sidebar-transition {
-            transition: all 0.3s ease-in-out;
-        }
-        .hamburger-line {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .dark .card-hover:hover {
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Styles spécifiques pour mobile */
-        @media (max-width: 640px) {
-            .table-responsive {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+        /* Animation pour le menu mobile */
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                z-index: 50;
             }
-            .dataTables_wrapper .dataTables_info, 
-            .dataTables_wrapper .dataTables_filter input {
-                font-size: 0.875rem;
+            .sidebar-mobile.open {
+                transform: translateX(0);
             }
-            .dataTables_wrapper .dataTables_length,
-            .dataTables_wrapper .dataTables_filter {
-                margin-bottom: 0.5rem;
+            .overlay {
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+                position: fixed;
+                z-index: 40;
             }
-            .modal-content {
-                width: 95%;
-                margin: 0 auto;
-            }
-            .action-buttons {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            .action-buttons button {
-                width: 100%;
+            .overlay.open {
+                opacity: 1;
+                visibility: visible;
             }
         }
     </style>
@@ -61,48 +69,29 @@
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 h-full">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-        <nav class="bg-white dark:bg-gray-800 shadow-md relative z-10">
-            <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <nav class="bg-white dark:bg-gray-800 shadow-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <!-- Mobile menu button -->
-                        <div class="flex-shrink-0 flex items-center md:hidden">
-                            <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
-                                <span class="sr-only">Ouvrir le menu</span>
-                                <div id="hamburger" class="space-y-2">
-                                    <span class="hamburger-line block w-6 h-0.5 bg-current"></span>
-                                    <span class="hamburger-line block w-6 h-0.5 bg-current"></span>
-                                    <span class="hamburger-line block w-6 h-0.5 bg-current"></span>
-                                </div>
-                                <div id="close" class="hidden relative w-6 h-6">
-                                    <span class="hamburger-line absolute top-1/2 left-0 block w-6 h-0.5 bg-current transform rotate-45"></span>
-                                    <span class="hamburger-line absolute top-1/2 left-0 block w-6 h-0.5 bg-current transform -rotate-45"></span>
-                                </div>
-                            </button>
-                        </div>
-                        <div class="flex-shrink-0 flex items-center">
-                            <a href="#" class="flex items-center" aria-label="AdmiSoft - Retour à l'accueil">
-                                <button class="flex items-center px-3 py-1 sm:px-5 sm:py-2 rounded-full bg-gradient-to-tr from-[#051769] to-[#0298e4] shadow-lg hover:scale-105 transition-all duration-200 border-2 border-white dark:border-gray-900 focus:outline-none">
-                                    <span class="text-white font-extrabold text-lg sm:text-xl tracking-wide drop-shadow">AdmiSoft</span>
-                                </button>
-                            </a>
+                        <!-- Bouton hamburger (visible seulement sur mobile) -->
+                        <button id="mobile-menu-button" type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div class="flex-shrink-0 flex items-center ml-4">
+                            <i class="fas fa-cube text-admisoft dark:text-admisoft-dark text-2xl mr-2"></i>
+                            <span class="text-xl font-bold text-gray-900 dark:text-white">ADMISOFT</span>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2 sm:space-x-4">
-                        <button id="theme-toggle" type="button" class="p-1 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <i class="fas fa-moon dark:hidden text-admisoft text-sm sm:text-base"></i>
-                            <i class="fas fa-sun hidden dark:block text-admisoft-light text-sm sm:text-base"></i>
+                    <div class="flex items-center space-x-4">
+                        <button id="theme-toggle" type="button" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i class="fas fa-moon dark:hidden"></i>
+                            <i class="fas fa-sun hidden dark:block"></i>
                         </button>
-                        <button onclick="window.open('https://www.admisoft.com', '_blank')" class="p-1 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" title="Visiter notre site web">
-                            <i class="fas fa-eye text-admisoft dark:text-admisoft-light text-sm sm:text-base"></i>
+                        <button onclick="window.open('https://www.admisoft.com', '_blank')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Visiter notre site web">
+                            <i class="fas fa-eye text-admisoft dark:text-admisoft-dark"></i>
                         </button>
-                        <div class="relative group">
-                            <img class="h-7 w-7 sm:h-8 sm:w-8 rounded-full cursor-pointer" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                            <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Votre profil</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Paramètres</a>
-                                <a href="#" id="logout-btn" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Déconnexion</a>
-                            </div>
+                        <div class="relative">
+                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                         </div>
                     </div>
                 </div>
@@ -110,89 +99,76 @@
         </nav>
 
         <!-- Main Content -->
-        <div class="flex-1 flex overflow-hidden relative">
-            <!-- Sidebar Backdrop (mobile) -->
-            <div id="sidebar-backdrop" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-20 hidden md:hidden"></div>
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Overlay pour fermer le menu sur mobile -->
+            <div id="sidebar-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
 
-            <!-- Sidebar -->
-            <aside id="sidebar" class="sidebar-transition transform -translate-x-full md:translate-x-0 fixed md:static inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
-                <div class="flex flex-col h-full pt-5 pb-4">
-                    <div class="flex items-center justify-between px-4 mb-8">
-                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Menu</h2>
-                        <button id="close-sidebar" class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+            <!-- Sidebar - Visible par défaut sur grand écran -->
+            <div id="sidebar" class="sidebar-mobile fixed md:relative inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-shrink-0 h-full transition-transform duration-200 ease-in-out md:translate-x-0">
+                <div class="h-full flex flex-col pt-5 pb-4 overflow-y-auto">
                     <nav class="flex-1 px-2 space-y-1">
-                        <a href="index.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 bg-gradient-to-r from-admisoft/10 to-admisoft/5 dark:from-admisoft-dark/20 dark:to-admisoft-dark/10 text-admisoft dark:text-admisoft-light border-l-4 border-admisoft dark:border-admisoft-light">
+                        <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-tachometer-alt mr-3 flex-shrink-0"></i>
-                            Tableau de bord
+                            Dashboard
                         </a>
-                        <a href="admin.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                            <i class="fas fa-user-shield mr-3 flex-shrink-0"></i>
-                            Administrateur
-                        </a>
-                        <a href="index.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 bg-gradient-to-r from-admisoft/10 to-admisoft/5 dark:from-admisoft-dark/20 dark:to-admisoft-dark/10 text-admisoft dark:text-admisoft-light border-l-4 border-admisoft dark:border-admisoft-light">
-                            <i class="fas fa-tachometer-alt mr-3 flex-shrink-0"></i>
+                        <a href="category.html" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <i class="fas fa-project-diagram mr-3 flex-shrink-0"></i>
                             Catégories
                         </a>
-                        <a href="color.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="color.html" class="bg-gray-100 dark:bg-gray-700 text-admisoft dark:text-admisoft-dark group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-palette mr-3 flex-shrink-0"></i>
                             Couleurs
                         </a>
-                        <a href="customer.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-users mr-3 flex-shrink-0"></i>
                             Clients
                         </a>
-                        <a href="#" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-envelope mr-3 flex-shrink-0"></i>
                             Messages
                         </a>
-                        <a href="commande.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-shopping-cart mr-3 flex-shrink-0"></i>
                             Commandes
                         </a>
-                        <a href="article.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-newspaper mr-3 flex-shrink-0"></i>
-                            Posts
+                            Articles
                         </a>
-                        <a href="product.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-box-open mr-3 flex-shrink-0"></i>
                             Produits
                         </a>
-                        <a href="service.html" class="group flex items-center px-3 py-3 text-sm font-medium rounded-lg mx-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <a href="#" class="text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <i class="fas fa-concierge-bell mr-3 flex-shrink-0"></i>
                             Services
                         </a>
                     </nav>
                 </div>
-            </aside>
+            </div>
 
             <!-- Content Area -->
             <div class="flex-1 overflow-auto focus:outline-none">
-                <div class="py-4 sm:py-6">
-                    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                            <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Catégories</h1>
-                            <div class="flex items-center w-full sm:w-auto justify-end">
-                                <!-- Bouton Ajouter dans le header -->
-                                <button id="addCategoryBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-white rounded-md hover:shadow-lg transition duration-300 text-sm sm:text-base">
-                                    <i class="fas fa-plus mr-1 sm:mr-2"></i> Ajouter
-                                </button>
-                            </div>
+                <div class="py-6">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between items-center">
+                            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Gestion des Couleurs</h1>
+                            <button id="addColorBtn" class="px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-white rounded-md hover:shadow-lg transition duration-300">
+                                <i class="fas fa-plus mr-2"></i> Ajouter
+                            </button>
                         </div>
                     </div>
-
-                    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6">
-                        <!-- Categories Table -->
-                        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-3 sm:p-6">
-                            <div class="table-responsive">
-                                <table id="categories-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <!-- Colors Table -->
+                        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+                            <div class="overflow-x-auto">
+                                <table id="colors-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead class="bg-gray-50 dark:bg-gray-700">
                                         <tr>
-                                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
-                                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
-                                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nom</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -207,25 +183,25 @@
         </div>
     </div>
 
-    <!-- Add Category Modal -->
-    <div id="addCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-2 sm:px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Add Color Modal -->
+    <div id="addColorModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full modal-content">
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Ajouter une catégorie</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Ajouter une couleur</h3>
                     <div class="mt-2">
-                        <input type="text" id="categoryName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la catégorie">
+                        <input type="text" id="colorName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la couleur">
                     </div>
                 </div>
-                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse action-buttons">
-                    <button type="button" id="confirmAddCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
+                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirmAddColor" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
                         Enregistrer
                     </button>
-                    <button type="button" id="cancelAddCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="cancelAddColor" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Annuler
                     </button>
                 </div>
@@ -233,26 +209,26 @@
         </div>
     </div>
 
-    <!-- Edit Category Modal -->
-    <div id="editCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-2 sm:px-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Edit Color Modal -->
+    <div id="editColorModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full modal-content">
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Modifier la catégorie</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Modifier la couleur</h3>
                     <div class="mt-2">
-                        <input type="hidden" id="editCategoryId">
-                        <input type="text" id="editCategoryName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la catégorie">
+                        <input type="hidden" id="editColorId">
+                        <input type="text" id="editColorName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-admisoft focus:border-admisoft dark:bg-gray-700 dark:text-white" placeholder="Nom de la couleur">
                     </div>
                 </div>
-                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse action-buttons">
-                    <button type="button" id="confirmEditCategory" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
+                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirmEditColor" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-tr from-[#051769] to-[#0298e4] text-base font-medium text-white hover:shadow-lg transition duration-300 sm:ml-3 sm:w-auto sm:text-sm">
                         Enregistrer
                     </button>
-                    <button type="button" id="cancelEditCategory" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="cancelEditColor" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Annuler
                     </button>
                 </div>
@@ -264,96 +240,50 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <script>
-        // Configuration de base
-        const API_BASE_URL = 'http://localhost/admisoft/admin/process';
-        const CATEGORY_API_URL = `${API_BASE_URL}/category-process.php`;
-
-        // Sidebar toggle functionality
-        const sidebar = document.getElementById('sidebar');
-        const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+        // Gestion du menu mobile
         const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const closeSidebarButton = document.getElementById('close-sidebar');
-        const hamburger = document.getElementById('hamburger');
-        const close = document.getElementById('close');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
 
-        function openSidebar() {
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.add('translate-x-0');
-            sidebarBackdrop.classList.remove('hidden');
-            hamburger.classList.add('hidden');
-            close.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+        function toggleMenu() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden');
         }
 
-        function closeSidebar() {
-            sidebar.classList.remove('translate-x-0');
-            sidebar.classList.add('-translate-x-full');
-            sidebarBackdrop.classList.add('hidden');
-            hamburger.classList.remove('hidden');
-            close.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
+        mobileMenuButton.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
 
-        mobileMenuButton.addEventListener('click', () => {
-            if (sidebar.classList.contains('-translate-x-full')) {
-                openSidebar();
-            } else {
-                closeSidebar();
-            }
+        // Fermer le menu quand on clique sur un lien (mobile seulement)
+        document.querySelectorAll('#sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    toggleMenu();
+                }
+            });
         });
-
-        closeSidebarButton.addEventListener('click', closeSidebar);
-        sidebarBackdrop.addEventListener('click', closeSidebar);
 
         // Dark mode toggle
         const themeToggleBtn = document.getElementById('theme-toggle');
         const html = document.documentElement;
 
-        // Check for saved user preference or use system preference
         if (localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             html.classList.add('dark');
         } else {
             html.classList.remove('dark');
         }
 
-        // Toggle theme
         themeToggleBtn.addEventListener('click', function() {
             html.classList.toggle('dark');
             localStorage.setItem('color-theme', html.classList.contains('dark') ? 'dark' : 'light');
         });
 
-        // Fonction pour faire les requêtes API avec gestion des erreurs
-        async function fetchAPI(url, options = {}) {
-            try {
-                const response = await fetch(url, {
-                    credentials: 'include',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    ...options
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || `Erreur HTTP: ${response.status}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('Erreur API:', error);
-                throw error;
-            }
-        }
-
-        // Initialisation de DataTable et gestion CRUD
+        // Initialisation de DataTable et gestion CRUD pour les couleurs
         $(document).ready(function() {
             // Initialisation de DataTable
-            const table = $('#categories-table').DataTable({
+            const table = $('#colors-table').DataTable({
                 responsive: true,
                 language: {
                     "sEmptyTable": "Aucune donnée disponible dans le tableau",
@@ -377,215 +307,229 @@
                         "sSortAscending": ": activer pour trier la colonne par ordre croissant",
                         "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
                     }
-                },
-                columnDefs: [
-                    { responsivePriority: 1, targets: 1 }, // Priorité à la colonne Nom
-                    { responsivePriority: 2, targets: 2 }, // Priorité aux actions
-                    { responsivePriority: 3, targets: 0 }  // ID moins prioritaire
-                ]
+                }
             });
 
-            // Charger les catégories depuis l'API
-            async function loadCategories() {
-                try {
-                    const data = await fetchAPI(CATEGORY_API_URL);
-
-                    table.clear();
-                    data.forEach(category => {
-                        table.row.add([
-                            category.cat_id,
-                            category.cat_name,
-                            `<div class="flex space-x-2 justify-end">
-                                <button class="edit-btn p-1 sm:p-1.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors duration-200" data-id="${category.cat_id}" data-name="${category.cat_name}" title="Modifier">
-                                    <i class="fas fa-edit text-xs sm:text-sm"></i>
-                                </button>
-                                <button class="delete-btn p-1 sm:p-1.5 rounded-md bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors duration-200" data-id="${category.cat_id}" title="Supprimer">
-                                    <i class="fas fa-trash text-xs sm:text-sm"></i>
-                                </button>
-                            </div>`
-                        ]).draw(false);
+            // Charger les couleurs depuis l'API
+            function loadColors() {
+                fetch('http://localhost/admisoft/admin/process/color-process.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        table.clear();
+                        data.forEach(color => {
+                            table.row.add([
+                                color.col_id,
+                                color.col_name,
+                                `<div class="flex space-x-2">
+                                    <button class="edit-btn p-1 text-blue-600 hover:text-blue-900 dark:hover:text-blue-400" data-id="${color.col_id}" data-name="${color.col_name}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-btn p-1 text-red-600 hover:text-red-900 dark:hover:text-red-400" data-id="${color.col_id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>`
+                            ]).draw(false);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: 'Impossible de charger les couleurs',
+                        });
                     });
-                } catch (error) {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Impossible de charger les catégories',
-                    });
-                }
             }
 
             // Chargement initial
-            loadCategories();
+            loadColors();
 
-            // Gestion de l'ajout de catégorie
-            const addModal = document.getElementById('addCategoryModal');
-            const addBtn = document.getElementById('addCategoryBtn');
-            const confirmAddBtn = document.getElementById('confirmAddCategory');
-            const cancelAddBtn = document.getElementById('cancelAddCategory');
+            // Gestion de l'ajout de couleur
+            const addModal = document.getElementById('addColorModal');
+            const addBtn = document.getElementById('addColorBtn');
+            const confirmAddBtn = document.getElementById('confirmAddColor');
+            const cancelAddBtn = document.getElementById('cancelAddColor');
 
             addBtn.addEventListener('click', () => {
-                document.getElementById('categoryName').value = '';
+                document.getElementById('colorName').value = '';
                 addModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
             });
 
             cancelAddBtn.addEventListener('click', () => {
                 addModal.classList.add('hidden');
-                document.body.style.overflow = '';
             });
 
-            confirmAddBtn.addEventListener('click', async () => {
-                const name = document.getElementById('categoryName').value.trim();
+            confirmAddBtn.addEventListener('click', () => {
+                const name = document.getElementById('colorName').value.trim();
                 if (!name) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Veuillez entrer un nom de catégorie',
+                        text: 'Veuillez entrer un nom de couleur',
                     });
                     return;
                 }
 
-                try {
-                    const data = await fetchAPI(CATEGORY_API_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({ cat_name: name })
-                    });
-
+                fetch('http://localhost/admisoft/admin/process/color-process.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ col_name: name })
+                })
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Succès',
-                            text: 'Catégorie ajoutée avec succès',
+                            text: 'Couleur ajoutée avec succès',
                             timer: 1500,
                             showConfirmButton: false
                         });
                         addModal.classList.add('hidden');
-                        document.body.style.overflow = '';
-                        await loadCategories();
+                        loadColors();
                     } else {
-                        throw new Error(data.error || 'Erreur lors de l\'ajout de la catégorie');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: data.error || 'Erreur lors de l\'ajout de la couleur',
+                        });
                     }
-                } catch (error) {
+                })
+                .catch(error => {
                     console.error('Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: error.message,
+                        text: 'Erreur lors de l\'ajout de la couleur',
                     });
-                }
+                });
             });
 
-            // Gestion de la modification de catégorie
-            const editModal = document.getElementById('editCategoryModal');
-            const confirmEditBtn = document.getElementById('confirmEditCategory');
-            const cancelEditBtn = document.getElementById('cancelEditCategory');
+            // Gestion de la modification de couleur
+            const editModal = document.getElementById('editColorModal');
+            const confirmEditBtn = document.getElementById('confirmEditColor');
+            const cancelEditBtn = document.getElementById('cancelEditColor');
 
             // Gestion des clics sur les boutons d'édition
             $(document).on('click', '.edit-btn', function() {
                 const id = $(this).data('id');
                 const name = $(this).data('name');
-
-                document.getElementById('editCategoryId').value = id;
-                document.getElementById('editCategoryName').value = name;
+                
+                document.getElementById('editColorId').value = id;
+                document.getElementById('editColorName').value = name;
                 editModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
             });
 
             cancelEditBtn.addEventListener('click', () => {
                 editModal.classList.add('hidden');
-                document.body.style.overflow = '';
             });
 
-            confirmEditBtn.addEventListener('click', async () => {
-                const id = document.getElementById('editCategoryId').value;
-                const name = document.getElementById('editCategoryName').value.trim();
-
+            confirmEditBtn.addEventListener('click', () => {
+                const id = document.getElementById('editColorId').value;
+                const name = document.getElementById('editColorName').value.trim();
+                
                 if (!name) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Veuillez entrer un nom de catégorie',
+                        text: 'Veuillez entrer un nom de couleur',
                     });
                     return;
                 }
 
-                try {
-                    const data = await fetchAPI(CATEGORY_API_URL, {
-                        method: 'PATCH',
-                        body: JSON.stringify({ 
-                            cat_id: id,
-                            cat_name: name 
-                        })
-                    });
-
+                fetch('http://localhost/admisoft/admin/process/color-process.php', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        col_id: id,
+                        col_name: name 
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Succès',
-                            text: 'Catégorie modifiée avec succès',
+                            text: 'Couleur modifiée avec succès',
                             timer: 1500,
                             showConfirmButton: false
                         });
                         editModal.classList.add('hidden');
-                        document.body.style.overflow = '';
-                        await loadCategories();
+                        loadColors();
                     } else {
-                        throw new Error(data.error || 'Erreur lors de la modification de la catégorie');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: data.error || 'Erreur lors de la modification de la couleur',
+                        });
                     }
-                } catch (error) {
+                })
+                .catch(error => {
                     console.error('Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: error.message,
+                        text: 'Erreur lors de la modification de la couleur',
                     });
-                }
+                });
             });
 
-            // Gestion de la suppression de catégorie
-            $(document).on('click', '.delete-btn', async function() {
+            // Gestion de la suppression de couleur
+            $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id');
-
-                const result = await Swal.fire({
+                
+                Swal.fire({
                     title: 'Confirmer la suppression',
-                    text: "Êtes-vous sûr de vouloir supprimer cette catégorie?",
+                    text: "Êtes-vous sûr de vouloir supprimer cette couleur?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#4F46E5',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Oui, supprimer!',
                     cancelButtonText: 'Annuler'
-                });
-
-                if (result.isConfirmed) {
-                    try {
-                        const data = await fetchAPI(CATEGORY_API_URL, {
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('http://localhost/admisoft/admin/process/color-process.php', {
                             method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
                             body: JSON.stringify({ id: id })
-                        });
-
-                        if (data.success) {
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Supprimé!',
+                                    text: 'La couleur a été supprimée.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                loadColors();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Erreur',
+                                    text: data.error || 'Erreur lors de la suppression de la couleur',
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
                             Swal.fire({
-                                icon: 'success',
-                                title: 'Supprimé!',
-                                text: 'La catégorie a été supprimée.',
-                                timer: 1500,
-                                showConfirmButton: false
+                                icon: 'error',
+                                title: 'Erreur',
+                                text: 'Erreur lors de la suppression de la couleur',
                             });
-                            await loadCategories();
-                        } else {
-                            throw new Error(data.error || 'Erreur lors de la suppression de la catégorie');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: error.message,
                         });
                     }
-                }
+                });
             });
         });
     </script>
